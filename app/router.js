@@ -5,6 +5,7 @@
  */
 module.exports = app => {
   const { router, controller } = app;
+  router.get('/wechat/auth', controller.wechat.auth);
   router.get('/wechat/clearCache', controller.wechat.clearCache);
   router.get('/wechat/setIdAndSecret', controller.wechat.setIdAndSecret);
   router.get('/wechat/getAccessToken', controller.wechat.getAccessToken);

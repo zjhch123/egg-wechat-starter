@@ -8,8 +8,8 @@ module.exports = appInfo => {
   const config = exports = {};
 
   config.keys = appInfo.name + '_1537495729369_6061';
-
-  config.middleware = [];
+  
+  config.wechatAuthToken = '123abc';
 
   config.sequelize = {
     dialect: 'mysql',

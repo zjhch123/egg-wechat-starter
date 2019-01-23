@@ -8,6 +8,7 @@ appId、appSecret、access_token、js_ticket等都在程序内设置了缓存。
 
 ## 路由:
 ```
+/wechat/auth // 微信服务端认证, 需要在config.default内设置认证token
 /wechat/setIdAndSecret?appId=xxx&appSecret=xxx    // 存储appId和appSecret，数据库里没有值会写入，有值则不进行任何操作
 /wechat/getAccessToken   // 获取access_token
 /wechat/getJSTicket      // 获取JS_Ticket

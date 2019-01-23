@@ -1,7 +1,7 @@
 'use strict';
 
 const Service = require('egg').Service;
-const Cache = require('memory-cache');
+const Cache = require('memory-cache'); // 缓存
 const moment = require('moment');
 const sha1 = require('sha1');
 
@@ -47,7 +47,7 @@ class WechatService extends Service {
 
   /**
    * 获取指定key的值, 如果能获取到的话会刷新缓存
-   * @param {string} key key
+   * @param {string} key key - appId/appSecret/access_token/js_ticket
    * @return {Object} 返回值, 包含key, value, refresh_time
    */
   async getConfig(key) {
@@ -87,6 +87,22 @@ class WechatService extends Service {
   // 以下都是请求用到的方法
 
   /**
+   * @return {Object} 返回值, 包含key, value, refresh_time
+   */
+  async getAppId() {
+    const appId = await this.getConfig('appId');
+    return appId;
+  }
+
+  /**
+   * @return {Object} 返回值, 包含key, value, refresh_time
+   */
+  async getAppSecret() {
+    const appSecret = await this.getConfig('appSecret');
+    return appSecret;
+  }
+
+  /**
    * 设置appId和appSecret
    * @param {string} appId appId
    * @param {string} appSecret appSecret
@@ -110,12 +126,12 @@ class WechatService extends Service {
       return access_token.value;
     }
 
-    const appId = await this.getConfig('appId');
+    const appId = await this.getAppId();
     if (appId === null || appId.value === null) {
       return -1;
     }
 
-    const appSecret = await this.getConfig('appSecret');
+    const appSecret = await this.getAppSecret();
     if (appSecret === null || appSecret.value === null) {
       return -2;
     }
@@ -169,7 +185,7 @@ class WechatService extends Service {
    * @return {int|string} -1 未设置appId, -4 js_ticket获取失败
    */
   async getWebSign(url) {
-    const appId = await this.getConfig('appId');
+    const appId = await this.getAppId();
     if (appId === null || appId.value === null) {
       return -1;
     }

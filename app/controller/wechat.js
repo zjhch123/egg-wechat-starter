@@ -1,13 +1,26 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-
+const sha1 = require('sha1');
 const response = require('../response');
 
 class WechatController extends Controller {
   async clearCache() {
     this.ctx.service.wechat.clearCache();
     this.ctx.body = response.success();
+  }
+
+  async auth() {
+    const signature = this.ctx.query.signature;
+    const timestamp = this.ctx.query.timestamp;
+    const echostr = this.ctx.query.echostr;
+    const nonce = this.ctx.query.nonce;
+
+    if (sha1([ this.config.wechatAuthToken, timestamp, nonce ].sort().join('')).toString() === signature) {
+      this.ctx.body = echostr;
+      return;
+    }
+    this.ctx.body = '';
   }
 
   async setIdAndSecret() {
@@ -19,6 +32,7 @@ class WechatController extends Controller {
     } catch (e) {
       console.error(e);
       this.ctx.body = response.error('server error');
+      return;
     }
 
     this.ctx.body = response.success();
